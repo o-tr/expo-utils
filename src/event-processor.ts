@@ -8,7 +8,7 @@ export async function setupEventData(eventData: EventItem[]): Promise<void> {
   if (!eventData) return;
   
   await Promise.all(
-    eventData.map(async (item) => limit(async () => {
+    eventData.map(async (item) => {
       const element = findElement(item);
       if (!element) return;
       
@@ -30,7 +30,7 @@ export async function setupEventData(eventData: EventItem[]): Promise<void> {
       const url = `https://ticket.expo2025.or.jp/api/d/events/${item.event_code}?${ticketIds}&entrance_date=${entranceDate}&channel=5`;
       
       try {
-        const data = await fetch(url);
+        const data = await limit(() => fetch(url));
         const json: EventDetailResponse = await data.json();
         const schedules: ScheduleInfo[] = Object.values(json.event_schedules).map((schedule) => ({
           name: schedule.schedule_name,
@@ -38,6 +38,7 @@ export async function setupEventData(eventData: EventItem[]): Promise<void> {
         }));
 
         if (schedules.filter((schedule) => schedule.available).length === 0) {
+          list.innerHTML = '';
           element.style.display = 'none';
           return;
         }
@@ -53,6 +54,6 @@ export async function setupEventData(eventData: EventItem[]): Promise<void> {
         console.error('イベント詳細の取得に失敗:', error);
         list.innerHTML = 'エラー';
       }
-    }))
+    })
   );
 }
