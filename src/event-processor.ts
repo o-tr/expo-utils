@@ -1,11 +1,14 @@
 import { EventItem, EventDetailResponse, ScheduleInfo } from './types';
 import { findElement } from './dom-utils';
+import pLimit from 'p-limit';
+
+const limit = pLimit(1);
 
 export async function setupEventData(eventData: EventItem[]): Promise<void> {
   if (!eventData) return;
   
   await Promise.all(
-    eventData.map(async (item) => {
+    eventData.map(async (item) => limit(async () => {
       const element = findElement(item);
       if (!element) return;
       
@@ -50,6 +53,6 @@ export async function setupEventData(eventData: EventItem[]): Promise<void> {
         console.error('イベント詳細の取得に失敗:', error);
         list.innerHTML = 'エラー';
       }
-    })
+    }))
   );
 }
