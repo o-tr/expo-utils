@@ -3,9 +3,12 @@ import { findElement } from './dom-utils';
 import pLimit from 'p-limit';
 
 const limit = pLimit(1);
+let isProcessing = false;
 
 export async function setupEventData(eventData: EventItem[]): Promise<void> {
-  if (!eventData) return;
+  if (!eventData || isProcessing) return;
+  
+  isProcessing = true;
   
   await Promise.all(
     eventData.map(async (item) => {
@@ -56,4 +59,6 @@ export async function setupEventData(eventData: EventItem[]): Promise<void> {
       }
     })
   );
+  
+  isProcessing = false;
 }
