@@ -19,6 +19,7 @@
   "author": "ootr",
   "license": "MIT",
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/tampermonkey": "^4.0.10",
     "rimraf": "^5.0.5",

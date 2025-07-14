@@ -1,4 +1,5 @@
 import typescript from '@rollup/plugin-typescript';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { readFileSync } from 'fs';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
@@ -21,6 +22,7 @@ export default {
 // ==/UserScript==`
   },
   plugins: [
+    nodeResolve(),
     typescript({
       tsconfig: './tsconfig.json',
       compilerOptions: {
